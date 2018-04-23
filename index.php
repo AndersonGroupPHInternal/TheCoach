@@ -5,6 +5,8 @@
     <title>Dashboard</title>
     <?php include("Layout/CssReference.php"); ?> 
     <?php include("Layout/JsReference.php"); ?> 
+    <link rel="icon" type="images/png" href="images/tabicon.PNG">
+    <title>Performance Coaching Form - Anderson Group BPO, Inc.</title>
 </head>
 <body>
     <!-- <div class="wrapper"> -->
