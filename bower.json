@@ -1,0 +1,17 @@
+{
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {
+    "angular-ui-select": "v0.19.6",
+    "bootstrap": "3.3.7",
+    "font-awesome": "4.6.1",
+    "pnotify": "3.2.0",
+    "angular": "v1.6.8",
+    "angular-route": "v1.6.8"
+  },
+  "resolutions": {
+    "angular": "v1.6.8",
+    "bootstrap": "3.3.7",
+    "pnotify": "3.2.0"
+  }
+}
