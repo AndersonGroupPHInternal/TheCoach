@@ -4,7 +4,11 @@ require_once '../config/config.php';
  
 // Define variables and initialize with empty values
 $coachtopic = $campaign = $agentname = $areasuccess = $areaopportunity = $actionplans = $coachdate = "";
+if (isset($_POST['campaignid'])){
+    $campaignid = $_POST['campaignid'];
+}
 $campaign_err = $coachtopic_err = $agentname_err = $areasuccess_err = $areaopportunity_err = $actionplans_err = $coachdate_err = "";
+
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -56,8 +60,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $input_campaign= trim($_POST["actionplans"]);
             if (empty($input_campaign)){
             $campaign_err = 'Select campaign.'; 
-        }else if(isset($_POST['campaign'])){
-            $campaign = $_POST['campaign'];  // Storing Selected Value In Variable
+        }else if(isset($_POST['campaignid'])){
+            $campaign = $_POST['campaignid'];  // Storing Selected Value In Variable
         }else{
             $campaign = $input_campaign;
         }
@@ -69,26 +73,30 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($coachtopic_err) && empty($campaign_err) && empty($agentname_err) && empty($areasuccess_err) && empty($areaopportunity_err) && empty($actionplans_err)){
         // Prepare an insert statement
-        $sql = "INSERT INTO employees (CoachingTopic, Campaign, AgentName, AreaOfSuccess, AreaOfOpportunity, ActionPlans, CoachingFollowUpDate) VALUES (:coachtopic, :campaign, :agentname, :areasuccess, :areaopportunity, :actionplans, :coachdate)";
- 
+        $sql = "INSERT INTO coachingrecord (ActionPlans, AgentName, AreaOfOpportunity, AreaOfSuccess, CampaignId, CoachingTopic, FollowUpDate) VALUES ( :actionplans, :agentname, :areaopportunity, :areasuccess,
+         (SELECT CampaignId FROM campaign WHERE CampaignId = :campaignid), :coachtopic, :followupdate)";
+
+
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':coachtopic', $param_coachtopic);
-            $stmt->bindParam(':campaign', $param_campaign);
-            $stmt->bindParam(':agentname', $param_agentname);
-            $stmt->bindParam(':areasuccess', $param_areasuccess);
-            $stmt->bindParam(':areaopportunity', $param_areaopportunity);
             $stmt->bindParam(':actionplans', $param_actionplans);
-            $stmt->bindParam(':coachdate', $param_coachdate);
+            $stmt->bindParam(':agentname', $param_agentname);
+            $stmt->bindParam(':areaopportunity', $param_areaopportunity);
+            $stmt->bindParam(':areasuccess', $param_areasuccess);
+            // $stmt->bindParam(':campaign', $param_campaign);
+            $stmt->bindParam(':campaignid', $param_campaignid);
+            $stmt->bindParam(':coachtopic', $param_coachtopic);
+            $stmt->bindParam(':followupdate', $param_followupdate);
 
             // Set parameters
-            $param_campaign = $campaign;
-            $param_coachtopic = $coachtopic;
-            $param_agentname = $agentname;
-            $param_areasuccess = $areasuccess;
-            $param_areaopportunity = $areaopportunity;
             $param_actionplans = $actionplans;
-            $param_coachdate = $new_date;
+            $param_agentname = $agentname;
+            $param_areaopportunity = $areaopportunity;
+            $param_areasuccess = $areasuccess;
+            // $param_campaign = $campaign;
+            $param_campaignid = $campaignid;
+            $param_coachtopic = $coachtopic;
+            $param_followupdate = $new_date;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
@@ -139,11 +147,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <label>Campaign:</label>
                         <div class="form-group <?php echo (!empty($campaign_err)) ? 'has-error' : ''; ?>">
-                                <select name="campaign" class="form-control">
-                                  <option></option>
-                                  <option>Flexr/PayPlus/Choice</option>
-                                  <option>Horizon Outsourcing</option>
-                                  <option>Flexible Outsourcing</option>
+                                <select name="campaignid" class="form-control">
+                                  <option selected disabled hidden>Select Campaign</option>
+                                    <?php 
+                                        require_once ('../config/config.php');
+                                            $sql = "SELECT CampaignId, Name FROM campaign";
+                                                $data = $pdo->prepare($sql);
+                                                $data->execute();
+                                                while($row=$data->fetch(PDO::FETCH_ASSOC)){
+                                                    echo '<option value="'.$row['CampaignId'].'">
+                                                    '.$row['Name'].'
+                                                    </option>';
+                                                }
+                                            unset($sql);
+                                            unset($pdo);
+                                         ?>
                                 </select>
                             <span class="help-block"><?php echo $campaign_err;?></span>
                         </div>
