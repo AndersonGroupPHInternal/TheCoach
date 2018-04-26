@@ -5,7 +5,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
     require_once '../config/config.php';
     
     // Prepare a select statement
-    $sql = "SELECT * FROM employees WHERE RecordId = :id";
+    $sql = "SELECT * FROM coachingrecord INNER JOIN campaign ON coachingrecord.CampaignId=campaign.CampaignId WHERE CoachingRecordId = :id";
     
     if($stmt = $pdo->prepare($sql)){
         // Bind variables to the prepared statement as parameters
@@ -22,13 +22,13 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 // Retrieve individual field value
-                $campaign = $row["Campaign"];
+                $campaign = $row["Name"];
                 $coachtopic = $row['CoachingTopic'];
                 $agentname = $row['AgentName'];
                 $areasuccess = $row["AreaOfSuccess"];
                 $areaopportunity = $row["AreaOfOpportunity"];
                 $actionplans = $row["ActionPlans"];
-                $coachdate = $row["CoachingFollowUpDate"];
+                $coachdate = $row["FollowUpDate"];
             } else{
                 // URL doesn't contain valid id parameter. Redirect to error page
                 header("location: ../public/error.php");
@@ -74,10 +74,10 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                     </div>
                     <div class="form-group">
                         <label>Campaign</label>
-                        <p class="form-control-static"><?php echo $row["Campaign"]; ?></p>
+                        <p class="form-control-static"><?php echo $row["Name"]; ?></p>
                     </div>
                     <div class="form-group">
-                        <label>Campaign</label>
+                        <label>Coaching Topic</label>
                         <p class="form-control-static"><?php echo $row["CoachingTopic"]; ?></p>
                     </div>
                     <div class="form-group">
@@ -98,7 +98,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                     </div>
                     <div class="form-group">
                         <label>Coaching Date</label>
-                        <p class="form-control-static"><?php echo $row["CoachingFollowUpDate"]; ?></p>
+                        <p class="form-control-static"><?php echo $row["FollowUpDate"]; ?></p>
                     </div>
                     <p><a href="../index.php" class="btn btn-primary">Back</a></p>
                 </div>
