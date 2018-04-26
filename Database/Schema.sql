@@ -15,7 +15,6 @@ CREATE TABLE coachingrecord (
     CampaignId INT NOT NULL,
 
     AgentName VARCHAR(30) NOT NULL, /*Todo: This might turn into another table*/
-    Campaign VARCHAR(22) NOT NULL,
     CoachingTopic VARCHAR(55) NOT NULL,
     ActionPlans VARCHAR(30) NOT NULL,
     AreaOfOpportunity VARCHAR(30) NOT NULL,

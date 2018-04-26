@@ -50,11 +50,11 @@
                                             <td class="text-center"><span ng-bind="coachingRecord.CoachingRecordId"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.CampaignId"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.AgentName"></span></td>
-                                            <td class="text-center"><span ng-bind="coachingRecord.Campaign"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.CoachingTopic"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.ActionPlans"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.AreaOfOpportunity"></span></td>
-                                            <td class="text-center"><span ng-bind="coachingRecord.AreaOfSuccess"></span></td>
+                                            <td class="text-center"><span ng-bind="coachingRecord.AreaOfSuccess"></span></td>                                            
+                                            <td class="text-center"><span ng-bind="coachingRecord.CampaignName"></span></td>
                                             <td class="text-center" ng-click="$event.originalEvent.dropdown = true">
                                                 <div class="dropdown">
                                                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
