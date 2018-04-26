@@ -1,27 +1,34 @@
  <?php
     require_once '../config/config.php';
-    /*echo json_encode( $_SERVER['REQUEST_METHOD']);*/
+    include_once '../Model/CoachingRecord.php';
+
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        $coachingRecords = array();
+        $sql = "SELECT * FROM coachingrecord";
+        if($result = $pdo->query($sql)){
+            if($result->rowCount() > 0){
+                while($row = $result->fetch()){
+                    
+                    $CoachingRecord = new CoachingRecord();
     
-    $employees = array();
-    $sql = "SELECT * FROM coachingrecord";
-    if($result = $pdo->query($sql)){
-        if($result->rowCount() > 0){
-            while($row = $result->fetch()){
-                $employees[] = array('FollowUpDate' => $row['FollowUpDate']);
-
-                $employees[] = array('CoachingRecordId' => $row['CoachingRecordId']);
-                $employees[] = array('CampaignId' => $row['CampaignId']);
-
-                $employees[] = array('AgentName' => $row['AgentName']);
-                $employees[] = array('Campaign' => $row['Campaign']);
-                $employees[] = array('CoachingTopic' => $row['CoachingTopic']);
-                $employees[] = array('ActionPlans' => $row['ActionPlans']);
-                $employees[] = array('AreaOfOpportunity' => $row['AreaOfOpportunity']);
-                $employees[] = array('AreaOfSuccess' => $row['AreaOfSuccess']);
+                    $CoachingRecord->FollowUpDate = $row['FollowUpDate'];
+    
+                    $CoachingRecord->CoachingRecordId = $row['CoachingRecordId'];
+                    $CoachingRecord->CampaignId = $row['CampaignId'];
+    
+                    $CoachingRecord->AgentName = $row['AgentName'];
+                    $CoachingRecord->Campaign = $row['Campaign'];
+                    $CoachingRecord->CoachingTopic = $row['CoachingTopic'];
+                    $CoachingRecord->ActionPlans = $row['ActionPlans'];
+                    $CoachingRecord->AreaOfOpportunity = $row['AreaOfOpportunity'];
+                    $CoachingRecord->AreaOfSuccess = $row['AreaOfSuccess'];
+                    array_push($coachingRecords,$CoachingRecord);
+                }
             }
-        } else{
-            
+            echo json_encode($coachingRecords);
         }
     }
-    echo json_encode($employees);
+    else {
+        echo json_encode("");
+    }    
  ?>
