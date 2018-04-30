@@ -15,7 +15,7 @@
         function Read() {
             return $http({
                 method: 'POST',
-                url: '/Json/CoachingRecord.php',
+                url: 'Json/CoachingRecord.php',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
         }
