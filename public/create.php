@@ -55,16 +55,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $actionplans = $input_actionplans;
     }
 
-    //Validate campaign
-    // if(isset($_REQUEST['campaign']) && $_REQUEST['campaign'] == '') { 
-        $input_campaign= trim($_POST["actionplans"]);
-            if (empty($input_campaign)){
-            $campaign_err = 'Select campaign.'; 
-        }else if(isset($_POST['campaignid'])){
-            $campaign = $_POST['campaignid'];  // Storing Selected Value In Variable
-        }else{
-            $campaign = $input_campaign;
-        }
+    //Validate campaign COMBOBOX
+    if (isset($_POST['campaignid' != NULL])){
+        $campaignid = $_POST['campaignid'];
+    }else if(isset($_POST['campaignid'])){
+        $campaignid = $_POST['campaignid']; // Storing Selected Value In Variable
+    }else{
+        $campaign_err = 'Required field';
+    }
 
     // Convert the string input of date
     $new_date = date('Y-m-d',strtotime($_POST['coachdate']));
@@ -76,14 +74,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $sql = "INSERT INTO coachingrecord (ActionPlans, AgentName, AreaOfOpportunity, AreaOfSuccess, CampaignId, CoachingTopic, FollowUpDate) VALUES ( :actionplans, :agentname, :areaopportunity, :areasuccess,
          (SELECT CampaignId FROM campaign WHERE CampaignId = :campaignid), :coachtopic, :followupdate)";
 
-
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(':actionplans', $param_actionplans);
             $stmt->bindParam(':agentname', $param_agentname);
             $stmt->bindParam(':areaopportunity', $param_areaopportunity);
             $stmt->bindParam(':areasuccess', $param_areasuccess);
-            // $stmt->bindParam(':campaign', $param_campaign);
             $stmt->bindParam(':campaignid', $param_campaignid);
             $stmt->bindParam(':coachtopic', $param_coachtopic);
             $stmt->bindParam(':followupdate', $param_followupdate);
@@ -93,7 +89,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_agentname = $agentname;
             $param_areaopportunity = $areaopportunity;
             $param_areasuccess = $areasuccess;
-            // $param_campaign = $campaign;
             $param_campaignid = $campaignid;
             $param_coachtopic = $coachtopic;
             $param_followupdate = $new_date;
@@ -147,19 +142,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <label>Campaign:</label>
                         <div class="form-group <?php echo (!empty($campaign_err)) ? 'has-error' : ''; ?>">
-                                <select name="campaignid" class="form-control">
+                                <select name="campaignid" id="campaignid" class="form-control">
                                   <option selected disabled hidden>Select Campaign</option>
                                     <?php 
-                                        require_once ('../config/config.php');
+                                        require ("../config/config.php");
                                             $sql = "SELECT CampaignId, Name FROM campaign";
                                                 $data = $pdo->prepare($sql);
                                                 $data->execute();
                                                 while($row=$data->fetch(PDO::FETCH_ASSOC)){
-                                                    echo '<option value="'.$row['CampaignId'].'">
-                                                    '.$row['Name'].'
-                                                    </option>';
+                                                    $selected = ''; // storage of selected combobox data
+                                                    if(!empty($_POST['campaignid']) and $_POST['campaignid'] == $row['CampaignId']) {
+                                                          $selected = ' selected="selected"';  // to retain the selected data
+                                                       }
+                                                    echo '<option value="'.$row['CampaignId'].'"'.$selected.'>'.$row['Name'].'
+                                                    </option>'; // extract the data
                                                 }
-                                            unset($sql);
+                                                //Close Statement
+                                                unset($sql);
+                                            //Close connection 
                                             unset($pdo);
                                          ?>
                                 </select>
