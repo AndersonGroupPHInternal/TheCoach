@@ -3,7 +3,7 @@
 require_once '../config/config.php';
  
 // Define variables and initialize with empty values
-$coachtopic = $campaign = $agentname = $areasuccess = $areaopportunity = $actionplans = $coachdate = "";
+$coachtopic = $campaignid = $agentname = $areasuccess = $areaopportunity = $actionplans = $coachdate = "";
 $coachtopic_err = $campaign_err = $agentname_err = $areasuccess_err = $areaopportunity_err = $actionplans_err = $coachdate_err = "";
  
 // Processing form data when form is submitted
@@ -72,11 +72,13 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Check input errors before inserting in database
     if(empty($coachtopic_err) && empty($campaign_err) && empty($agentname_err) && empty($areasuccess_err) && empty($areaopportunity_err) && empty($actionplans_err)){
         // Prepare an insert statement
-        $sql = "UPDATE employees SET Campaign=:campaign, CoachingTopic=:coachtopic, AgentName=:agentname, AreaOfSuccess=:areasuccess, AreaOfOpportunity=:areaopportunity, ActionPlans=:actionplans, CoachingFollowUpDate=:coachdate WHERE RecordId=:id";
+        $sql = "UPDATE coachingrecord 
+            LEFT JOIN campaign ON coachingrecord.CampaignId=campaign.CampaignId 
+            SET coachingrecord.CampaignId=:campaignid, coachingrecord.CoachingTopic=:coachtopic, coachingrecord.AgentName=:agentname, coachingrecord.AreaOfSuccess=:areasuccess, coachingrecord.AreaOfOpportunity=:areaopportunity, coachingrecord.ActionPlans=:actionplans, coachingrecord.FollowUpDate=:coachdate WHERE coachingrecord.CoachingRecordId=:id";
  
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':campaign', $param_campaign);
+            $stmt->bindParam(':campaignid', $param_campaign);
             $stmt->bindParam(':coachtopic', $param_coachtopic);
             $stmt->bindParam(':agentname', $param_agentname);
             $stmt->bindParam(':areasuccess', $param_areasuccess);
@@ -86,7 +88,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $stmt->bindParam(':id', $param_id);
 
             // Set parameters
-            $param_campaign = $campaign;
+            $param_campaign = $campaignid;
             $param_coachtopic = $coachtopic;
             $param_agentname = $agentname;
             $param_areasuccess = $areasuccess;
@@ -98,7 +100,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Records updated successfully. Redirect to landing page
-                header("location: ../index.php");
+                header("location: ../public/dashboard.php");
                 exit();
             } else{
                 echo "Something went wrong. Please try again later.";
@@ -119,7 +121,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         $id =  trim($_GET["id"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM employees WHERE RecordId = :id";
+        $sql = "SELECT * FROM coachingrecord WHERE CoachingRecordId = :id";
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(':id', $param_id);
@@ -135,13 +137,13 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                     // Retrieve individual field value
-                    $campaign = $row["Campaign"];
+                    $campaign = $row["CampaignId"];
                     $coachtopic = $row['CoachingTopic'];
                     $agentname = $row['AgentName'];
                     $areasuccess = $row["AreaOfSuccess"];
                     $areaopportunity = $row["AreaOfOpportunity"];
                     $actionplans = $row["ActionPlans"];
-                    $coachdate = $row["CoachingFollowUpDate"];
+                    $coachdate = $row["FollowUpDate"];
 
                 } else{
                     // URL doesn't contain valid id. Redirect to error page
@@ -195,11 +197,30 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
                         <label>Campaign:</label>
                         <div class="form-group <?php echo (!empty($campaign_err)) ? 'has-error' : ''; ?>">
-                                <select name="campaign" class="form-control">
-                                    <option></option>
+                                <select name="campaignid" class="form-control">
+                                    <!-- <option></option>
                                     <option>Flexr/PayPlus/Choice</option>
                                     <option>Horizon Outsourcing</option>
-                                    <option>Flexible Outsourcing</option>
+                                    <option>Flexible Outsourcing</option> -->
+                                     <?php 
+                                        require ("../config/config.php");
+                                            $sql = "SELECT CampaignId, Name FROM campaign 
+                                            LEFT JOIN coachingrecord ON campaign.CampaignId=coachingrecord.CoachingRecordId";
+                                                $data = $pdo->prepare($sql);
+                                                $data->execute();
+                                                while($row=$data->fetch(PDO::FETCH_ASSOC)){
+                                                    $selected = ''; // storage of selected combobox data
+                                                    if(!empty($_POST['campaignid']) and $_POST['campaignid'] == $row['CampaignId']) {
+                                                          $selected = ' selected="selected"';  // to retain the selected data
+                                                       }
+                                                    echo '<option value="'.$row['CampaignId'].'"'.$selected.'>'.$row['Name'].'
+                                                    </option>'; // extract the data
+                                                }
+                                                //Close Statement
+                                                unset($sql);
+                                            //Close connection 
+                                            unset($pdo);
+                                         ?>
                                 </select>
                             <span class="help-block"><?php echo $campaign_err;?></span>
                         </div>
@@ -248,7 +269,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         </script>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="../index.php" class="btn btn-default">Cancel</a>
+                        <a href="../public/dashboard.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        
