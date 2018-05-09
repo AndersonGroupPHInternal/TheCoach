@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Records created successfully. Redirect to landing page
-                header("location: ../index.php");
+                header("location: ../public/dashboard.php");
                 exit();
             } else{
                 echo "Something went wrong. Please try again later.";
@@ -211,7 +211,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             </script>
                         </div>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="../index.php" class="btn btn-default">Cancel</a>
+                        <a href="../public/dashboard.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        
