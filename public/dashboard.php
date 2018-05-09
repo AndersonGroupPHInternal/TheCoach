@@ -8,7 +8,7 @@
     <?php include("../Layout/AngularJsReference.php"); ?> 
     <link rel="icon" type="../images/png" href="../images/tabicon.PNG">
 </head>
-<<<<<<< HEAD:public/dashboard.php
+
 
         <?php
             session_start();
@@ -21,11 +21,6 @@
 
 <body ng-app="App">
     <!-- <div class="wrapper"> -->
-        
-=======
-<body ng-app="App">
-    <!-- <div class="wrapper"> -->
->>>>>>> 15e334bebeb20ea42e41940dcc0fc706f6ed234f:index.php
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 ">
