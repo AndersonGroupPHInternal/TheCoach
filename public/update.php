@@ -3,9 +3,11 @@
 require_once '../config/config.php';
  
 // Define variables and initialize with empty values
-$coachtopic = $campaignid = $agentname = $areasuccess = $areaopportunity = $actionplans = $coachdate = "";
+$coachtopic =  $agentname = $areasuccess = $areaopportunity = $actionplans = $coachdate = "";
 $coachtopic_err = $campaign_err = $agentname_err = $areasuccess_err = $areaopportunity_err = $actionplans_err = $coachdate_err = "";
- 
+if (isset($_POST['campaignid'])){
+    $campaignid = $_POST['campaignid'];
+}
 // Processing form data when form is submitted
 if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Get hidden input value
@@ -53,16 +55,14 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         $actionplans = $input_actionplans;
     }
 
-    //Validate campaign
-    // if(isset($_REQUEST['campaign']) && $_REQUEST['campaign'] == '') { 
-        $input_campaign= trim($_POST["actionplans"]);
-            if (empty($input_campaign)){
-            $campaign_err = 'Select campaign.'; 
-        }else if(isset($_POST['campaign'])){
-            $campaign = $_POST['campaign'];  // Storing Selected Value In Variable
-        }else{
-            $campaign = $input_campaign;
-        }
+    //Validate campaign COMBOBOX
+    if (isset($_POST['campaignid' != NULL])){
+        $campaignid = $_POST['campaignid'];
+    }else if(isset($_POST['campaignid'])){
+        $campaignid = $_POST['campaignid']; // Storing Selected Value In Variable
+    }else{
+        $campaign_err = 'Required field';
+    }
 
 
     // Convert the string input of date
@@ -73,8 +73,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     if(empty($coachtopic_err) && empty($campaign_err) && empty($agentname_err) && empty($areasuccess_err) && empty($areaopportunity_err) && empty($actionplans_err)){
         // Prepare an insert statement
         $sql = "UPDATE coachingrecord 
-            LEFT JOIN campaign ON coachingrecord.CampaignId=campaign.CampaignId 
-            SET coachingrecord.CampaignId=:campaignid, coachingrecord.CoachingTopic=:coachtopic, coachingrecord.AgentName=:agentname, coachingrecord.AreaOfSuccess=:areasuccess, coachingrecord.AreaOfOpportunity=:areaopportunity, coachingrecord.ActionPlans=:actionplans, coachingrecord.FollowUpDate=:coachdate WHERE coachingrecord.CoachingRecordId=:id";
+         SET coachingrecord.CampaignId=:campaignid, coachingrecord.CoachingTopic=:coachtopic, coachingrecord.AgentName=:agentname, coachingrecord.AreaOfSuccess=:areasuccess, coachingrecord.AreaOfOpportunity=:areaopportunity, coachingrecord.ActionPlans=:actionplans, coachingrecord.FollowUpDate=:coachdate WHERE coachingrecord.CoachingRecordId=:id";
  
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -121,7 +120,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         $id =  trim($_GET["id"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM coachingrecord WHERE CoachingRecordId = :id";
+        $sql = "SELECT * FROM coachingrecord WHERE coachingrecord.CoachingRecordId = :id";
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(':id', $param_id);
@@ -137,7 +136,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                     // Retrieve individual field value
-                    $campaign = $row["CampaignId"];
+                    $campaignid = $row["CampaignId"];
                     $coachtopic = $row['CoachingTopic'];
                     $agentname = $row['AgentName'];
                     $areasuccess = $row["AreaOfSuccess"];
@@ -198,14 +197,10 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         <label>Campaign:</label>
                         <div class="form-group <?php echo (!empty($campaign_err)) ? 'has-error' : ''; ?>">
                                 <select name="campaignid" class="form-control">
-                                    <!-- <option></option>
-                                    <option>Flexr/PayPlus/Choice</option>
-                                    <option>Horizon Outsourcing</option>
-                                    <option>Flexible Outsourcing</option> -->
+                                    <option selected disabled hidden>Select Campaign</option>
                                      <?php 
                                         require ("../config/config.php");
-                                            $sql = "SELECT CampaignId, Name FROM campaign 
-                                            LEFT JOIN coachingrecord ON campaign.CampaignId=coachingrecord.CoachingRecordId";
+                                            $sql = "SELECT campaign.CampaignId, campaign.Name FROM campaign";
                                                 $data = $pdo->prepare($sql);
                                                 $data->execute();
                                                 while($row=$data->fetch(PDO::FETCH_ASSOC)){
@@ -272,7 +267,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         <a href="../public/dashboard.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </body>
