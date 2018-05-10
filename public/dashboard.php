@@ -9,7 +9,6 @@
     <link rel="icon" type="../images/png" href="../images/tabicon.PNG">
 </head>
 
-
         <?php
             session_start();
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -21,6 +20,7 @@
 
 <body ng-app="App">
     <!-- <div class="wrapper"> -->
+        
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 ">
@@ -51,6 +51,8 @@
                                             <th class="text-center">Action Plans</th>
                                             <th class="text-center">Area Of Opportunity</th>
                                             <th class="text-center">Area Of Success</th>
+                                            <th class="text-center">Created By</th>
+                                            <th class="text-center">Created Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -64,7 +66,9 @@
                                             <td class="text-center"><span ng-bind="coachingRecord.CoachingTopic"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.ActionPlans"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.AreaOfOpportunity"></span></td>
-                                            <td class="text-center"><span ng-bind="coachingRecord.AreaOfSuccess"></span></td>    
+                                            <td class="text-center"><span ng-bind="coachingRecord.AreaOfSuccess"></span></td>
+                                            <td class="text-center"><span ng-bind="coachingRecord.CreatedBy"></span></td>                                             
+                                            <td class="text-center"><span ng-bind="coachingRecord.CreatedDate"></span></td>
                                             <td class="text-center" ng-click="$event.originalEvent.dropdown = true">
                                                 <div class="dropdown">
                                                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
@@ -77,7 +81,7 @@
                                                                 <span class='glyphicon glyphicon-eye-open'></span>
                                                             </a>
                                                         </li>
-                                                        <!-- <li>
+                                                        <li>
                                                             <a href='../public/update.php?id={{coachingRecord.CoachingRecordId}}' title='Update Record' data-toggle='tooltip'>
                                                                 <span class='glyphicon glyphicon-pencil'></span>
                                                             </a>
@@ -86,7 +90,7 @@
                                                             <a href='../public/delete.php?id={{coachingRecord.CoachingRecordId}}' title='Delete Record' data-toggle='tooltip'>
                                                                 <span class='glyphicon glyphicon-trash'></span>
                                                             </a>
-                                                        </li> -->
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </td>

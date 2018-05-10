@@ -20,6 +20,8 @@
                     $CoachingRecord->ActionPlans = $row['ActionPlans'];
                     $CoachingRecord->AreaOfOpportunity = $row['AreaOfOpportunity'];
                     $CoachingRecord->AreaOfSuccess = $row['AreaOfSuccess'];
+                    $CoachingRecord->CreatedBy = $row['CreatedBy'];
+                    $CoachingRecord->CreatedDate = $row['CreatedDate'];
                     // $CoachingRecord->CampaignName = $row['Campaign.CampaignName'];
                     array_push($coachingRecords,$CoachingRecord);
                 }

@@ -1,5 +1,6 @@
 <?php
-	session_destroy();
-	header('Location: index.php');
-	exit;
+	session_start();
+    $_SESSION = array();
+    session_destroy();
+	header("Location: ../public/index.php");
 ?>

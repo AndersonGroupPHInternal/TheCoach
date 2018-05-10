@@ -8,8 +8,16 @@ if (isset($_POST['campaignid'])){
     $campaignid = $_POST['campaignid'];
 }
 $campaign_err = $coachtopic_err = $agentname_err = $areasuccess_err = $areaopportunity_err = $actionplans_err = $coachdate_err = "";
+ $date = date('Y-m-d');
+ $createdDate = date('Y-m-d');
 
- 
+
+ session_start();
+ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+    $createdBy = $_SESSION['username'];
+ }
+
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -49,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     // Validate action plans
     $input_actionplans= trim($_POST["actionplans"]);
-    if(empty($input_areaopportunity)){
+    if(empty($input_actionplans)){
         $actionplans_err = 'Required field.';     
     } else{
         $actionplans = $input_actionplans;
@@ -71,8 +79,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($coachtopic_err) && empty($campaign_err) && empty($agentname_err) && empty($areasuccess_err) && empty($areaopportunity_err) && empty($actionplans_err)){
         // Prepare an insert statement
-        $sql = "INSERT INTO coachingrecord (ActionPlans, AgentName, AreaOfOpportunity, AreaOfSuccess, CampaignId, CoachingTopic, FollowUpDate) VALUES ( :actionplans, :agentname, :areaopportunity, :areasuccess,
-         (SELECT CampaignId FROM campaign WHERE CampaignId = :campaignid), :coachtopic, :followupdate)";
+        $sql = "INSERT INTO coachingrecord (ActionPlans, AgentName, AreaOfOpportunity, AreaOfSuccess, CampaignId, CoachingTopic, FollowUpDate, CreatedBy, CreatedDate) VALUES ( :actionplans, :agentname, :areaopportunity, :areasuccess,
+         (SELECT CampaignId FROM campaign WHERE CampaignId = :campaignid), :coachtopic, :followupdate, :createdBy, :createdDate)";
 
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -83,6 +91,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->bindParam(':campaignid', $param_campaignid);
             $stmt->bindParam(':coachtopic', $param_coachtopic);
             $stmt->bindParam(':followupdate', $param_followupdate);
+            $stmt->bindParam(':createdDate', $param_createdDate);
+            $stmt->bindParam(':createdBy', $param_createdBy);
 
             // Set parameters
             $param_actionplans = $actionplans;
@@ -92,6 +102,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_campaignid = $campaignid;
             $param_coachtopic = $coachtopic;
             $param_followupdate = $new_date;
+            $param_createdDate = $createdDate;
+            $param_createdBy = $createdBy;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
@@ -111,6 +123,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     unset($pdo);
 }
 ?>
+
+        
 
 <!DOCTYPE html>
 <html lang="en">
