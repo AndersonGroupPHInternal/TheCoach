@@ -15,6 +15,8 @@ $campaign_err = $coachtopic_err = $agentname_err = $areasuccess_err = $areaoppor
  session_start();
  if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
     $createdBy = $_SESSION['username'];
+ }else{
+    header("Location: ../public/error.php");
  }
 
 

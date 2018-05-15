@@ -8,6 +8,15 @@ $coachtopic_err = $campaign_err = $agentname_err = $areasuccess_err = $areaoppor
 if (isset($_POST['campaignid'])){
     $campaignid = $_POST['campaignid'];
 }
+$updatedDate = date('Y-m-d');
+
+session_start();
+ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+    $updatedBy = $_SESSION['username'];
+ }else{
+    header("Location: ../public/error.php");
+ }
+
 // Processing form data when form is submitted
 if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Get hidden input value
@@ -73,7 +82,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     if(empty($coachtopic_err) && empty($campaign_err) && empty($agentname_err) && empty($areasuccess_err) && empty($areaopportunity_err) && empty($actionplans_err)){
         // Prepare an insert statement
         $sql = "UPDATE coachingrecord 
-         SET coachingrecord.CampaignId=:campaignid, coachingrecord.CoachingTopic=:coachtopic, coachingrecord.AgentName=:agentname, coachingrecord.AreaOfSuccess=:areasuccess, coachingrecord.AreaOfOpportunity=:areaopportunity, coachingrecord.ActionPlans=:actionplans, coachingrecord.FollowUpDate=:coachdate WHERE coachingrecord.CoachingRecordId=:id";
+         SET coachingrecord.CampaignId=:campaignid, coachingrecord.CoachingTopic=:coachtopic, coachingrecord.AgentName=:agentname, coachingrecord.AreaOfSuccess=:areasuccess, coachingrecord.AreaOfOpportunity=:areaopportunity, coachingrecord.ActionPlans=:actionplans, coachingrecord.FollowUpDate=:coachdate, coachingrecord.UpdatedBy=:updatedBy, coachingrecord.UpdatedDate=:updatedDate WHERE coachingrecord.CoachingRecordId=:id";
  
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -84,6 +93,8 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $stmt->bindParam(':areaopportunity', $param_areaopportunity);
             $stmt->bindParam(':actionplans', $param_actionplans);
             $stmt->bindParam(':coachdate', $param_coachdate);
+            $stmt->bindParam(':updatedBy', $param_updatedBy);
+            $stmt->bindParam(':updatedDate', $param_updatedDate);
             $stmt->bindParam(':id', $param_id);
 
             // Set parameters
@@ -94,6 +105,8 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $param_areaopportunity = $areaopportunity;
             $param_actionplans = $actionplans;
             $param_coachdate = $new_date;
+            $param_updatedBy = $updatedBy;
+            $param_updatedDate = $updatedDate;
             $param_id = $id;
             
             // Attempt to execute the prepared statement
