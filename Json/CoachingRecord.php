@@ -5,7 +5,7 @@
 
         $coachingRecords = array();
         // $sql = "SELECT FollowUpDate, CoachingRecordId, CampaignId, Campaign.Name, AgentName, CoachingTopic, ActionPlans, AreaOfOpportunity, AreaOfSuccess, CampaignName FROM coachingrecord INNER JOIN campaign ON coachingrecord.CampaignId = Campaign.CampaignId";
-        $sql = "SELECT coachingrecord.*, campaign.Name FROM coachingrecord LEFT JOIN campaign ON coachingrecord.CampaignId=campaign.CampaignId";
+        $sql = "SELECT * FROM coachingrecord LEFT JOIN campaign ON coachingrecord.CampaignId=campaign.CampaignId";
         if($result = $pdo->query($sql)){
             if($result->rowCount() > 0){
                 while($row = $result->fetch()){
@@ -22,6 +22,9 @@
                     $CoachingRecord->AreaOfSuccess = $row['AreaOfSuccess'];
                     $CoachingRecord->CreatedBy = $row['CreatedBy'];
                     $CoachingRecord->CreatedDate = $row['CreatedDate'];
+                    $CoachingRecord->UpdatedBy = $row['UpdatedBy'];
+                    $CoachingRecord->UpdatedDate = $row['UpdatedDate'];
+                    
                     // $CoachingRecord->CampaignName = $row['Campaign.CampaignName'];
                     array_push($coachingRecords,$CoachingRecord);
                 }
