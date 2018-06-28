@@ -53,6 +53,8 @@
                                             <th class="text-center">Area Of Success</th>
                                             <th class="text-center">Created By</th>
                                             <th class="text-center">Created Date</th>
+                                            <th class="text-center">Updated By</th>
+                                            <th class="text-center">Updated Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -67,8 +69,10 @@
                                             <td class="text-center"><span ng-bind="coachingRecord.ActionPlans"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.AreaOfOpportunity"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.AreaOfSuccess"></span></td>
-                                            <td class="text-center"><span ng-bind="coachingRecord.CreatedBy"></span></td>                                             
+                                            <td class="text-center"><span ng-bind="coachingRecord.CreatedBy"></span></td>
                                             <td class="text-center"><span ng-bind="coachingRecord.CreatedDate"></span></td>
+                                            <td class="text-center"><span ng-bind="coachingRecord.UpdatedBy"></span></td>
+                                            <td class="text-center"><span ng-bind="coachingRecord.UpdatedDate"></span></td>
                                             <td class="text-center" ng-click="$event.originalEvent.dropdown = true">
                                                 <div class="dropdown">
                                                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">

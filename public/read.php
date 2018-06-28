@@ -52,15 +52,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
         }
 ?>
 
-        <?php
-            session_start();
-            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                header("Location: ../public/dashboard.php");
-            } else {
-                header("Location: ../public/index.php");
-            }
-        ?>
-        
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

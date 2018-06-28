@@ -21,11 +21,11 @@
 							<span class="input-group-addon">
 								<i class="glyphicon glyphicon-user"></i>
 							</span> 
-							<input type="text" class="form-control" name="username" placeholder="Username"> 
+							<input type="text" class="form-control" name="username" placeholder="Username" required> 
 						</div> 
 						<div class="input-group margT25"> 
 							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span> 
-							<input type="password" class="form-control" name="password" placeholder="Password"> 
+							<input type="password" class="form-control" name="password" placeholder="Password" required> 
 						</div>
 						<div class="form-group margT10"> 
 						<!-- Button --> 
